@@ -1,0 +1,50 @@
+import 'package:flutter/material.dart';
+import 'package:imuubys/main.dart';
+import 'package:imuubys/student.dart';
+
+class StudentAdd extends StatefulWidget {
+  const StudentAdd({Key key}) : super(key: key);
+
+  @override
+  State<StudentAdd> createState() => _StudentAddState();
+}
+var  isim1 = TextEditingController();
+var isim2 = TextEditingController();
+var puan = TextEditingController();
+int i=4;
+class _StudentAddState extends State<StudentAdd> {
+  @override
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Yeni Öğrenci Ekle'),
+
+      ),
+      body: Column(
+        children: <Widget>[
+          TextField(controller: isim1,
+            decoration: InputDecoration(
+                labelText: 'abc',
+                hintText: 'İsim '),
+
+          ),
+          TextField(controller:isim2,
+            decoration: InputDecoration(hintText: 'Soy İsim ',),
+          ),
+          TextField(controller : puan,
+            decoration: InputDecoration(hintText: 'Puan '),),
+          RaisedButton(
+              child: Text('Ekle'),
+              onPressed: (){
+                students.add(Student.withId(i,isim1.text, isim2.text, int.tryParse(puan.text), true));
+              i++;
+              }
+
+          )
+        ],
+
+      ),
+    );
+  }
+}
