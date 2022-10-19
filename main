@@ -1,0 +1,159 @@
+import 'package:flutter/material.dart';
+import 'package:imuubys/student.dart';
+import 'package:imuubys/student_add.dart';
+
+void main() {
+  runApp( MaterialApp(
+      debugShowCheckedModeBanner:false,
+      home:MyApp()));
+}
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() {
+    return _MyAppState();
+  }
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Öğrenci Notlandırma Sistemi",style: TextStyle(
+            fontFamily: 'Schyler',
+            color: Colors.white70,fontSize: 25.0),),
+      ),
+      body: Column(children: <Widget>[
+        Expanded(
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+              child: ListView.builder(
+                  itemCount: students.length,
+                  itemBuilder:(BuildContext context , int index){
+                    return ListTile(
+                      title: Text(students[index].firstname+"  "+students[index].lastname),
+                      subtitle: Text("Sınavdan aldığı not :"+students[index].grade.toString()+"     "+students[index].sinavHesapla(students[index].grade)),
+                      leading: CircleAvatar(
+                          backgroundColor: Colors.blueGrey,
+                          child:Text(students[index].firstname[0],style: TextStyle(color:Colors.cyanAccent),)),
+                      trailing:buildStatusIcon(students[index].grade),
+                      onTap: (){
+                        print(students[index].Id);
+                        setState(() {
+                          seciliogrenci=students[index].firstname;
+                          selectedStudent=students[index];
+                        });
+                      },
+                    );
+
+                  }
+              ),
+            )
+        ),
+        Text("Seçilen Öğrenci"+"   "+seciliogrenci,style:TextStyle(color:Colors.blue),),
+        Row(
+          children: <Widget>[
+            Flexible(
+              fit:FlexFit.tight,
+              flex:1,
+              child:RaisedButton(
+                onPressed: (){
+                  setState(() {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentAdd()));
+                  });
+                },
+                color:Colors.cyan,
+                child :Row(
+                  children: <Widget>[
+                    Icon(Icons.add,color: Colors.white,),
+                    SizedBox(width: 5.0),
+                    Text("Ekle",style: TextStyle(color:Colors.white70)),
+                  ],
+                ),
+              ),
+            ),
+
+            Flexible(
+              fit:FlexFit.tight,
+              flex:1,
+              child:RaisedButton(
+                color: Colors.green,
+                onPressed: (){
+                  setState(() {
+                    runApp( MaterialApp(
+                        debugShowCheckedModeBanner:false,
+                        home:MyApp()));
+                    mesajgoster(context, "Güncellendi");
+                  });
+                },
+                child :Row(
+                  children: <Widget>[
+                    Icon(Icons.update,color: Colors.white,),
+                    SizedBox(width: 5.0),
+                    Text("Güncelle",style: TextStyle(color:Colors.white70)),
+                  ],
+                ),
+              ),
+            ),
+            Flexible(
+              fit:FlexFit.tight,
+              flex:1,
+              child:RaisedButton(
+                color:Colors.red,
+                onPressed: (){
+                  setState(() {
+                    students.remove(selectedStudent);
+                    mesajgoster(context, "Silindi");
+                  });
+                },
+                child :Row(
+                  children: <Widget>[
+                    Icon(Icons.delete,color: Colors.white,),
+                    SizedBox(width: 5.0),
+                    Text("Sil",style: TextStyle(color:Colors.white70),),
+                  ],
+                ),
+
+              ),
+
+            ),
+
+
+          ],
+
+
+        ),
+
+
+      ],),
+    );
+  }
+}
+Student selectedStudent = Student.withId(0, "", "", 0,true);
+String seciliogrenci="";
+List <Student> students =  [
+  Student.withId(1,'Ali','B.',50,true),
+  Student.withId(2,'Veli','C.',40,true),
+  Student.withId(3,'Ayşe','D.',5,true),
+];
+Widget buildStatusIcon(int grade){
+  if(grade>=50){
+    return Icon (Icons.done);
+  }
+  else if(grade>=40){
+    return Icon(Icons.album);
+  }
+  else {
+    return Icon(Icons.clear);
+  }
+}
+void mesajgoster(BuildContext context, String mesaj){
+  var alert = AlertDialog(
+    title: Text("Uyarı!"),
+    content: Text(mesaj),
+  );
+  showDialog(context: context, builder: (BuildContext context)=>alert);
+
+
+}
